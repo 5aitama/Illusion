@@ -21,6 +21,7 @@ import init, {
     new physical width: ${physical_width}, new physical height: ${physical_height}
     new logical width: ${logical_width}, new logical height: ${logical_height}
     `);
+
 }
 
 var time = 0;
