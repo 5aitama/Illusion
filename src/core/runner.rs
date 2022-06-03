@@ -3,9 +3,9 @@ use winit::{
     event_loop::ControlFlow
 };
 
-use super::gfx::{GfxInstance, GfxWindow};
+use super::{instance::IlsInstance, window::IlsWindow};
 
-pub fn run(mut instance: GfxInstance, win: GfxWindow) {
+pub fn run(mut instance: IlsInstance, win: IlsWindow) {
     cfg_if::cfg_if! {
         if #[cfg(target_arch = "wasm32")] {
             std::panic::set_hook(Box::new(console_error_panic_hook::hook));
@@ -25,13 +25,11 @@ pub fn run(mut instance: GfxInstance, win: GfxWindow) {
         } if window_id == window.id() => match event {
             
             WindowEvent::Resized(physical_size) => {
-                let logical_size = (*physical_size).to_logical::<u32>(window.scale_factor());
-                instance.resize(*physical_size, logical_size);
+                instance.resize(*physical_size);
             },
 
             WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
-                let logical_size = (**new_inner_size).to_logical::<u32>(window.scale_factor());
-                instance.resize(**new_inner_size, logical_size);
+                instance.resize(**new_inner_size);
             },
 
             WindowEvent::CloseRequested | WindowEvent::KeyboardInput {
@@ -50,7 +48,7 @@ pub fn run(mut instance: GfxInstance, win: GfxWindow) {
             match instance.render() {
                 Ok(_) => {}
                 // Reconfigure the surface if lost
-                Err(wgpu::SurfaceError::Lost) => instance.resize(instance.size, instance.size.to_logical(window.scale_factor())),
+                Err(wgpu::SurfaceError::Lost) => instance.resize(*instance.get_size()),
                 // The system is out of memory, we should probably quit
                 Err(wgpu::SurfaceError::OutOfMemory) => *control_flow = ControlFlow::Exit,
                 // All other errors (Outdated, Timeout) should be resolved by the next frame

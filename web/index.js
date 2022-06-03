@@ -1,10 +1,8 @@
 import init, { 
-    gfx_create_instance, 
-    gfx_start,
-    gfx_create_window,
-    gfx_set_clear_color,
-    gfx_test_struct,
-    gfx_create_shader,
+    ils_create_window,
+    ils_create_instance,
+    ils_run_instance,
+    ils_set_clear_color,
 } from './lib/illusion.js';
 
 /**
@@ -29,11 +27,11 @@ var lastTime = performance.now();
 var deltaTime = 0;
 var acc = 0;
 var fps = 0; 
-var GFX = 0;
+var ILS_INSTANCE = 0;
 
 /**
  * Callback called once per frame
- * when graphx is ready to render.
+ * when Illusion is ready to render.
  */
 function onRender() {
     // console.log("On render called");
@@ -41,7 +39,7 @@ function onRender() {
 
 /**
  * Callback called once per frame 
- * when graphix is ready to update.
+ * when Illusion is ready to update.
  */
 function onUpdate() {
     time      = performance.now();
@@ -59,37 +57,33 @@ function onUpdate() {
     let c = (Math.cos(time / 1000.0 + 298) + 1.0) / 2.0;
     let s = (Math.sin(time / 1000.0 + 0.5) + 1.0) / 2.0;
     
-    gfx_set_clear_color(GFX, c, s, (Math.cos(time / 1000.0 + 42.0) + 1.0) / 2.0, 1.0);
+    ils_set_clear_color(ILS_INSTANCE, c, s, (Math.cos(time / 1000.0 + 42.0) + 1.0) / 2.0, 1.0);
 }
 
 /**
- * Callback called when GraphX must
+ * Callback called when Illusion must
  * initialize.
  */
-function onGraphXInitialize() {
-    let window_ptr = gfx_create_window();
+function onIllusionInitialize() {
+    let window_ptr = ils_create_window(800, 600);
 
-    // Create new instance of GraphX. This
-    // will return a pointer to the GraphX
+    // Create new instance of Illusion. This
+    // will return a pointer to the Illusion
     // instance created.
-    GFX = gfx_create_instance(
-        onUpdate,
-        onRender,
-        onResize,
-        window_ptr,
-    );
+    ILS_INSTANCE = ils_create_instance(window_ptr, {
+        on_update: onUpdate,
+        on_resize: onResize,
+        on_render: onRender,
+    });
 
-    gfx_test_struct({ name: "Hello world !"})
-    gfx_create_shader("this is my shader !");
-    
     // This will start the engine. And it 
     // will automatically free the pointer (
     // so C/C++ dev don't worry about memory
     // leaks 😌)
-    gfx_start(GFX, window_ptr);
+    ils_run_instance(window_ptr, ILS_INSTANCE);
 }
 
-// Initialize the wasm module and then initialize GraphX...
+// Initialize the wasm module and then initialize Illusion...
 init()
-    .then(onGraphXInitialize)
-    .catch(err => console.error("Failed to initialize GraphX", err));
+    .then(onIllusionInitialize)
+    .catch(err => console.error("Failed to initialize Illusion", err));
