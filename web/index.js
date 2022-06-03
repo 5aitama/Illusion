@@ -5,7 +5,7 @@ import init, {
     gfx_set_clear_color,
     gfx_test_struct,
     gfx_create_shader,
-} from './pkg/rust_graphx.js';
+} from './lib/illusion.js';
 
 /**
  * Callback called when the canvas is resized.
