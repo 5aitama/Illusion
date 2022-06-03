@@ -1,6 +1,6 @@
 <p align="center">
-<img src="./res/Illusion-logo-white.png#gh-dark-mode-only">
-<img src="./res/Illusion-logo-black.png#gh-light-mode-only">
+<img width=400 src="./res/Illusion-logo-white.png#gh-dark-mode-only">
+<img width=400 src="./res/Illusion-logo-black.png#gh-light-mode-only">
 </p>
 
 <br />
